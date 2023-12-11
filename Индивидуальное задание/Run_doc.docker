@@ -1,0 +1,35 @@
+# Установка необходимых зависимостей
+FROM ubuntu:latest
+
+
+RUN apt-get update && apt-get install -y xvfb
+
+# Установка необходимых пакетов для Snapd
+RUN apt-get install -y gnupg2 dirmngr
+
+
+# Установка Snapd
+RUN apt-get update && apt-get install -y snapd
+
+# Установка Python и других необходимых зависимостей
+RUN apt-get install -y python3 python3-pip
+
+RUN pip3 install requests pandas plotly dash joblib statsmodels
+
+# Создание рабочей директории в контейнере
+WORKDIR /app
+
+# Копирование файлов в рабочую директорию
+COPY . /app
+
+# Загрузка и распаковка архива с данными
+#RUN apt-get install -y wget && \
+  #  wget https://cloud.mail.ru/public/68PP/UoGQGvcC1 -O data.zip
+
+# Установка unzip и распаковка архива
+#RUN apt-get install -y unzip && \
+    #unzip data.zip -d /app
+
+# Установка Xvfb и настройка переменной окружения DISPLAY
+ENV DISPLAY=:99
+CMD Xvfb :99 -screen 0 1024x768x16 & python Run_Me.py
